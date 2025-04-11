@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Order Tracking</h2>
+<ul id="order-status-list"></ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+<script>
+    const socket = io();
+    socket.on('order_status_update', function(data) {
+        const listItem = document.getElementById(`order-${data.order_id}`);
+        if (listItem) {
+            listItem.textContent = `Order #${data.order_id}: ${data.status}`;
+        } else {
+            const newItem = document.createElement('li');
+            newItem.id = `order-${data.order_id}`;
+            newItem.textContent = `Order #${data.order_id}: ${data.status}`;
+            document.getElementById('order-status-list').appendChild(newItem);
+        }
+    });
+</script>
+{% endblock %}
